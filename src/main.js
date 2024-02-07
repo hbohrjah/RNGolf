@@ -7,11 +7,12 @@
 let config = {
     type: Phaser.AUTO,
     width: 640,
-    height: 960,
+    height: 480,
     physics:
     {
         default: 'arcade',
         arcade: {
+            gravity: { y: 500 },
             debug: true
         }
     },

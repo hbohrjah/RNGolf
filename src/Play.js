@@ -23,133 +23,90 @@ class Play extends Phaser.Scene {
         // add background grass
         this.grass = this.add.image(0, 0, 'grass').setOrigin(0)
 
-        // add cup
-        this.cup = this.physics.add.sprite(width/2, height/10, 'cup')
+        this.moveSpeed =2
+        let square = this.physics.add.sprite(0, height/4, 'wall'); // Adjust the position as needed
+        square.setImmovable(true); // Make the square immovable
+        square.body.setCollideWorldBounds(true)
 
-        //sets collision body to circle
-        this.cup.body.setCircle(this.cup.width/4)
-        this.cup.body.setOffset(this.cup.width/4)
-        this.cup.body.setImmovable(true)
-        
+        this.keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT)
+        this.keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT)
+
+
+
         // add ball
         //height - height/10
-        this.ball = this.physics.add.sprite(width/2, height/10 - 100, 'ball')
+        //this.ball = this.physics.add.sprite(width/2, height/10 - 100, 'ball')
+        this.ball=this.physics.add.sprite(this.sys.game.config.width/2,height/2,"ball")
 
         //sets collision body to circle
         this.ball.body.setCircle(this.ball.width/2)
         this.ball.body.setCollideWorldBounds(true)
-        this.ball.body.setBounce(0.5)
-        this.ball.body.setDamping(true).setDrag(0.5)
-
-        // add walls
-        let wallA = this.physics.add.sprite(0, height/4, 'wall')
-        wallA.name = "wall1"  
-        wallA.setX(Phaser.Math.Between(0+ wallA.width/2, width- wallA.width/2))
-        wallA.body.setImmovable(true)
-
-        let wallB = this.physics.add.sprite(0, height/2, 'wall')
-        wallB.name = "wall2"  
-        wallB.setX(Phaser.Math.Between(0+ wallB.width/2, width- wallB.width/2))
-        wallB.body.setImmovable(true)
-
-        this.wallC = this.physics.add.sprite(0, height/6, 'wall')
-        //this.wallC.setX(Phaser.Math.Between(0+ this.wallC.width/2, width- this.wallC.width/2))
-        this.wallC.body.setCollideWorldBounds(true)
-        this.wallC.body.setBounce(0.5)
-        //this.wallC.body.setImmovable(false)
-
-        //group collider to like sprites
-        this.walls = this.add.group([wallA,wallB])
-
-        // add one-way
-        this.oneWay = this.physics.add.sprite(width/2, height/4+3, 'oneway')
-        this.oneWay.setX(Phaser.Math.Between(0 + this.oneWay.width/2, width - this.oneWay.width/2))
-        this.oneWay.body.setImmovable(true)
-        this.oneWay.body.checkCollision.down = false
+        this.ball.body.setBounce(1.0)
+        this.ball.body.setMass(5)
+        //this.ball.body.setDamping(true).setDrag(0.5)
+        
 
         // add pointer input
-
+        this.ball.setGravityY(50);
         this.input.on('pointerdown', (pointer)=> 
         {
-            let shotDir = pointer.y <= this.ball.y? 1: -1
+            //let shotDir = pointer.y <= this.ball.y? 1: -1
             // Calculate the direction based on pointer's relative x-position
-            let directionX = pointer.x - this.ball.x;
+            //let directionX = pointer.x - this.ball.x;
 
             // Normalize the direction
-            let length = Math.sqrt(directionX * directionX);
-            directionX /= length;
+            //let length = Math.sqrt(directionX * directionX);
+            //directionX /= length;
 
             // Set the velocity based on the direction
-            this.ball.body.setVelocityX(directionX * 500); // Adjust the speed as needed
+            //this.ball.body.setVelocityX(directionX * 500); // Adjust the speed as needed
             //this.ball.body.setVelocityX(Phaser.Math.Between(-this.SHOT_VELOCITY_X, this.SHOT_VELOCITY_X))
-            this.ball.body.setVelocityY(Phaser.Math.Between(this.SHOT_VELOCITY_Y_MIN, this.SHOT_VELOCITY_Y_MAX)* shotDir)
+           this.ball.body.setVelocityY(300)
         })
 
         // cup/ball collision
-
-        this.physics.add.collider(this.ball, this.cup, (ball, cup)=> 
-        {
-            ball.destroy()
-            this.new_ball()
-        })
-
-
-        
+        this.physics.add.collider(this.ball, square)
         // ball/wall collision
-        this.physics.add.collider(this.ball, this.walls)
-        this.physics.add.collider(this.ball, this.wallC, (ball, wall)=>
-        {
-            wall.setImmovable(true)
-        })
-
+        
         // ball/one-way collision
-        this.physics.add.collider(this.ball, this.oneWay)
     }
 
-    update() {
-
-        //console.log(this.wallC.width/2)
-        //console.log(this.wallC.body.setVelocityX(-100)) // Adjust the speed as needed)
-        //this.wallC.body.setVelocityX(100); // Adjust the speed as needed
-
-        if(this.wallC.x == this.game.width - this.wallC.width)
-        {
-            this.wallC.body.setVelocityX(-100); // Adjust the speed as needed
-        }
-        
-        if(this.wallC.x == this.wallC.width/2)
-        {
-            this.wallC.body.setVelocityX(100); // Adjust the speed as needed
-        }
-        
-        
-
-    }
-
-    new_ball()
+    update() 
     {
-  
-        this.ball = this.physics.add.sprite(width/2, height - height/10, 'ball')
-        //sets collision body to circle
-        this.ball.body.setCircle(this.ball.width/2)
-        this.ball.body.setCollideWorldBounds(true)
-        this.ball.body.setBounce(0.5)
-        this.ball.body.setDamping(true).setDrag(0.5)
-        // ball/wall collision
-        this.physics.add.collider(this.ball, this.walls)
+        if(this.keyLEFT.isDown )
+        {
+            //&& this.ball.x >= this.config.width
+            //this.ball.setAngularVelocity(-200);
+            //this.ball.x -= this.moveSpeed
+            this.ball.setVelocityX(-200)
+        }
+        else if(this.keyRIGHT.isDown )
+        {
+            //&& this.ball.x <= this.config.width
+            //this.ball.setAngularVelocity(200);
+            //this.ball.x += this.moveSpeed
+            this.ball.setVelocityX(200)
+        }
+        else
+        {
+            //DAMP FACTOR is 0.9
+            this.ball.setVelocityX(this.ball.body.velocity.x * 0.9)
+        }
 
-        // ball/one-way collision
-        this.physics.add.collider(this.ball, this.oneWay)
+        
+        // add new barrier when existing barrier hits center X
+        if(this.newBarrier && this.x < centerX) {
+            // (recursively) call parent scene method from this context
+            this.parentScene.addBarrier(this.parent, this.velocity);
+            this.newBarrier = false;
+            this.parentScene.addBarrier(this.parent, this.velocity)
+            this.newBarrier = false
+        }
+
+        // destroy paddle if it reaches the left edge of the screen
+        if(this.x < -this.width) {
+            this.destroy();
+            this.destroy()
+        }
     }
-
 }
-/*
-CODE CHALLENGE
-Try to implement at least 3/4 of the following features during the remainder of class (hint: each takes roughly 15 or fewer lines of code to implement):
-[#] Add ball reset logic on successful shot
-[ ] Improve shot logic by making pointer’s relative x-position shoot the ball in correct x-direction
-[#] Make one obstacle move left/right and bounce against screen edges
-[ ] Create and display shot counter, score, and successful shot percentage
-
-points/shots
-*/
