@@ -21,6 +21,7 @@ class Load extends Phaser.Scene {
         // load graphics assets
         // load images/tile sprites
         this.load.image('wall', 'img/wall.png')
+        this.load.image('city', 'img/cityScape.png')
         //this.load.image('spaceship', './assets/doritoShip.png')
         this.load.image('ball', 'img/ball.png')
         this.load.image('grass', 'img/grass.jpg')
@@ -42,6 +43,11 @@ class Load extends Phaser.Scene {
             frameWidth: 64,
             frameHeight: 32
         })
+        this.load.spritesheet('alertArrow', 'img/missleAlert-Sheet.png',
+        {
+            frameWidth: 32,
+            frameHeight: 32
+        })
     }
 
     create() {
@@ -55,19 +61,25 @@ class Load extends Phaser.Scene {
             key: 'dart',
             frames: this.anims.generateFrameNumbers('dart', { start: 0, end: 1}),
             frameRate: 5,
-            repeat : 1
+            repeat : -1
         })
         this.anims.create({
             key: 'mouse',
             frames: this.anims.generateFrameNumbers('mouse', { start: 0, end: 1}),
-            frameRate: 5,
-            repeat : 1
+            frameRate: 2,
+            repeat : -1
         })
         this.anims.create({
             key: 'arrow',
             frames: this.anims.generateFrameNumbers('arrow', { start: 0, end: 2}),
-            frameRate: 5,
-            repeat : 1
+            frameRate: 2,
+            repeat : -1
+        })
+        this.anims.create({
+            key: 'alert',
+            frames: this.anims.generateFrameNumbers('alertArrow', { start: 0, end: 5}),
+            frameRate: 20,
+            repeat: 2
         })
 
         // go to Title scene

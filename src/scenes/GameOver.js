@@ -42,19 +42,24 @@ class GameOver extends Phaser.Scene {
     update() {
         // wait for UP input to restart game
        
-        if (Phaser.Input.Keyboard.JustDown( this.input.keyboard.addKey(RKey))) {
-            /*let textureManager = this.textures;
-            console.log(textureManager)
-            // take snapshot of the entire game viewport (same as title screen)
-            this.game.renderer.snapshot((snapshotImage) => {
-                console.log('took snapshot in GameOver')
-                if(textureManager.exists('titlesnapshot')) {
-                    textureManager.remove('titlesnapshot');
-                }
-                textureManager.addImage('titlesnapshot', snapshotImage);
-            });*/
+        /*let textureManager = this.textures;
+        console.log(textureManager)
+        // take snapshot of the entire game viewport (same as title screen)
+        this.game.renderer.snapshot((snapshotImage) => {
+            console.log('took snapshot in GameOver')
+            if(textureManager.exists('titlesnapshot')) {
+                textureManager.remove('titlesnapshot');
+            }
+            textureManager.addImage('titlesnapshot', snapshotImage);
+        });*/
+        this.restart()
+    }
 
+    restart()
+    {
+        if (Phaser.Input.Keyboard.JustDown( this.input.keyboard.addKey(RKey))) {
             // start next scene
+            passed = 0
             this.scene.start('playScene');
         }
     }
